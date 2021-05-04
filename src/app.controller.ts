@@ -1,5 +1,5 @@
 import { Controller, Get, Logger } from '@nestjs/common';
-import { EventPattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { Categoria } from './interfaces/categoria/categoria.interface';
 
@@ -13,6 +13,15 @@ export class AppController {
   async criarCategoria(@Payload() categoria: Categoria) {
     this.logger.log(`categoria: ${JSON.stringify(categoria)}`);
 
-    return this.appService.criarCategoria(categoria);
+    return await this.appService.criarCategoria(categoria);
+  }
+
+  @MessagePattern('consultar-categoria')
+  async consultarCategoria(@Payload() _id: string) {
+    if (_id) {
+      return await this.appService.buscarCategoriaPeloId(_id);
+    } else {
+      return await this.appService.buscarCategorias();
+    }
   }
 }
