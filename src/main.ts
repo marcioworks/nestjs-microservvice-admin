@@ -11,6 +11,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [env.RABBIT_URL],
+      noAck: false,
       queue: 'admin-backend',
     },
   });
